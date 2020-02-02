@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="FirstApp.MainPage">
+
+    <StackLayout Margin="10,10">
+        <!-- Place new controls here -->
+        <Entry x:Name="titleInput"
+               Placeholder="หัวข้อ"
+               Text="{Binding Title, Mode=TwoWay}"
+               Style="{StaticResource mainEntryStyle}" />
+
+        <!-- ค้นหาสถานที่ -->
+        <Entry x:Name="searchEntry"
+               Text="{Binding Query, Mode=TwoWay}"
+               TextChanged="searchEntry_TextChanged"
+               Style="{StaticResource mainEntryStyle}"
+               Placeholder="ค้นหาสถานที่"/>
+        <!-- รายการสถานที่ -->
+        <ListView x:Name="venuesListView"
+                  IsVisible="{Binding ShowVenues}"
+                  SelectedItem="{Binding SelectedVenue, Mode=TwoWay}"
+                  HeightRequest="20"
+                  Margin="-16,0">
+            <ListView.ItemTemplate>
+                <!-- ข้อมูลแต่ละแถว-->
+                <DataTemplate>
+                    <TextCell Text="{Binding name}"
+                              Detail="{Binding location.distance, StringFormat='{0} meters away'}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <!-- แสดงสถานที่เลือกแล้ว -->
+        <StackLayout x:Name="selectedVenueStackLayout"
+                     IsVisible="{Binding ShowSelectedVenue}">
+            <Label x:Name="venueNameLabel"
+                   Text="{Binding SelectedVenue.name}"
+                   Style="{StaticResource titleLabelStyle}"/>
+            <Label x:Name="venueCategoryLabel"
+                   Text="{Binding SelectedVenue.MainCategory}"
+                   Style="{StaticResource subtitleLabelStyle}"/>
+            <Label x:Name="venueCoordinatesLabel"
+                   Text="{Binding SelectedVenue.location.Coordinates}"
+                   Style="{StaticResource detailLabelStyle}"/>
+        </StackLayout>
+
+        <!-- เนื้อหา -->
+        <Editor x:Name="contentEditor" VerticalOptions="FillAndExpand"
+                Text="{Binding Content, Mode=TwoWay}"
+                Placeholder="เขียนประสบการของคุณ"
+                Style="{StaticResource mainEditorStyle}"/>
+        
+        <!-- ปุ่ม -->
+        <Button Text="บันทึก"
+                Style="{StaticResource mainButtonStyle}"
+                IsEnabled="{Binding CanSave}"
+                x:Name="saveButton"
+                Clicked="saveButton_Clicked"/>
+        <Button Text="ยกเลิก"
+                Style="{StaticResource cancelButtonStyle}"
+                Command="{Binding CancelCommand}"
+                CommandParameter="{Binding CanSave}"/>
+
+    </StackLayout>
+
+</ContentPage>

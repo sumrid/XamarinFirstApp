@@ -1,6 +1,7 @@
 ﻿using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using FirstApp.Views;
 
 namespace FirstApp
 {
@@ -15,14 +16,18 @@ namespace FirstApp
             // รับพาทมาจาก iOS and android
             DatabasePath = databasePath;
 
-            MainPage = new MainPage();
+            // กำหนดหน้าแรกของ app
+            // MainPage = new MainPage();
+            MainPage = new NavigationPage(new ExperiencePage());
         }
 
         public App()
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            // กำหนดหน้าแรกของ app
+            // MainPage = new MainPage();
+            MainPage = new NavigationPage(new ExperiencePage());
         }
 
         protected override void OnStart()
