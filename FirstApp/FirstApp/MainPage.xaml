@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="FirstApp.MainPage">
+
+    <StackLayout Margin="10,10">
+        <!-- Place new controls here -->
+        <Entry x:Name="titleInput"
+               Placeholder="หัวข้อ"
+               Style="{StaticResource mainEntryStyle}"
+               TextChanged="titleInput_TextChanged"/>
+        <Editor x:Name="contentEditor" VerticalOptions="FillAndExpand"
+                Placeholder="เขียนประสบการของคุณ"
+                Style="{StaticResource mainEditorStyle}"
+                TextChanged="contentEditor_TextChanged"/>
+        <Button Text="บันทึก"
+                Style="{StaticResource mainButtonStyle}"
+                IsEnabled="False"
+                x:Name="saveButton"
+                Clicked="saveButton_Clicked"/>
+        <Button Text="ยกเลิก" Style="{StaticResource cancelButtonStyle}"/>
+    </StackLayout>
+
+</ContentPage>
