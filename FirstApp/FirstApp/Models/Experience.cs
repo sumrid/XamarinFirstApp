@@ -34,5 +34,15 @@ namespace FirstApp.Models
         {
             return Title;
         }
+
+        public static List<Experience> GetExperiences()
+        {
+            using (SQLiteConnection conn = new SQLiteConnection(App.DatabasePath))
+            {
+                // get data from table
+                conn.CreateTable<Experience>();
+                return conn.Table<Experience>().ToList();
+            }
+        }
     }
 }

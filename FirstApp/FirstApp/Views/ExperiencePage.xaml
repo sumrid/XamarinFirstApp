@@ -4,24 +4,16 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="FirstApp.Views.ExperiencePage"
-             xmlns:vm="clr-namespace:FirstApp.ViewModels">
+             x:Class="FirstApp.Views.ExperiencePage">
     
-    <!-- ประกาศ ExperienceVM -->
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <vm:ExperiencesVM x:Key="vm"/>
-        </ResourceDictionary>
-    </ContentPage.Resources>
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="New"
-                     BindingContext="{StaticResource vm}"
+        <ToolbarItem Text="เพิ่ม"
                      Command="{Binding NewExperienceCommand}" />
     </ContentPage.ToolbarItems>
     
     <ContentPage.Content>
-        <ListView x:Name="expListView">
+        <ListView x:Name="expListView" ItemsSource="{Binding Experiences}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextCell Text="{Binding Title}"

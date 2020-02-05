@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
 using System.ComponentModel;
-using FirstApp.Models;
 using Xamarin.Forms;
 using SQLite;
+
+using FirstApp.Models;
+using FirstApp.ViewModels.Helper;
+
+using Plugin.Permissions.Abstractions;
 
 namespace FirstApp.ViewModels
 {
@@ -35,6 +40,16 @@ namespace FirstApp.ViewModels
             set
             {
                 query = value;
+                if (!string.IsNullOrWhiteSpace(query))
+                {
+                    // get and show list
+                    GetVenues();
+                    ShowVenues = true;
+                }
+                else
+                {
+                    ShowVenues = false;
+                }
                 OnPropertyChanged("Query");
             }
         }
@@ -93,11 +108,49 @@ namespace FirstApp.ViewModels
         public ICommand CancelCommand { get; set; }
         public ICommand SaveCommand { get; set; }
 
+        LocationHelper locationHelper;
+        public ObservableCollection<Venue> Venues { get; set; }
+
         public MainVM()
         {
             // init command
             CancelCommand = new Command(CancelAction);
             SaveCommand = new Command<bool>(SaveAction, CanExecuteSave);
+
+            // init helper
+            locationHelper = new LocationHelper();
+
+            // init list
+            Venues = new ObservableCollection<Venue>();
+        }
+
+        public async void GetVenues()
+        {
+            var response = await Search.SearchRequest(locationHelper.position.Latitude, locationHelper.position.Longitude, 500, Query);
+
+            Venues.Clear();
+            foreach(var venue in response.venues)
+            {
+                Venues.Add(venue);
+            }
+        }
+
+        public async void GetLocationPermission()
+        {
+            var status = await PermissionsHelper.GetPermission(Permission.LocationWhenInUse);
+            
+            if (status == PermissionStatus.Granted)
+            {
+                await locationHelper.GetLocation(TimeSpan.FromMinutes(30), 500);
+            } else
+            {
+                await App.Current.MainPage.DisplayAlert("Access to location denied", "We don't have access to your location", "Ok");
+            }
+        }
+
+        public void StopListeningLocationUpdates()
+        {
+            locationHelper.StopListening();
         }
 
         void CancelAction(object obj)

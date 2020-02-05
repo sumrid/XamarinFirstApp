@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+
+using FirstApp.Helpers;
 
 namespace FirstApp.Models
 {
@@ -93,5 +98,19 @@ namespace FirstApp.Models
     {
         public Meta meta { get; set; }
         public Response response { get; set; }
+
+        public static async Task<Response> SearchRequest(double lat, double lng, int radius, string query, int limit = 3)
+        {
+            string url = $"https://api.foursquare.com/v2/venues/search?ll={lat},{lng}&radius={radius}&query={query}&limit={limit}&client_id={Helpers.Constants.FOURSQR_CLIENT_ID}&client_secret={Helpers.Constants.FOURSQR_CLIENT_SECRET}&v={DateTime.Now.ToString("yyyyMMdd")}";
+
+            using (HttpClient client = new HttpClient())
+            {
+                // made the method async
+                string json = await client.GetStringAsync(url);
+
+                return JsonConvert.DeserializeObject<Search>(json).response;
+            }
+        }
     }
+
 }

@@ -10,6 +10,7 @@ using SQLite;
 using Newtonsoft.Json;
 using FirstApp.Models;
 using FirstApp.ViewModels;
+using FirstApp.ViewModels.Helper;
 
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
@@ -24,7 +25,6 @@ namespace FirstApp
     public partial class MainPage : ContentPage
     {
         // property
-        IGeolocator locator = CrossGeolocator.Current;
         Position position;
         MainVM viewModel;
 
@@ -35,68 +35,18 @@ namespace FirstApp
             // use view model for binding
             viewModel = new MainVM();
             BindingContext = viewModel;
-
-            // set event handler when location change
-            locator.PositionChanged += Locator_PositionChanged;
-        }
-
-        private async void GetLocationPermission()
-        {
-            // ขอสิทธิจากผู้ใช้
-            var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.LocationWhenInUse);
-            if(status != PermissionStatus.Granted)
-            {
-                if(await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.LocationWhenInUse))
-                {
-                    await DisplayAlert("Need your permission", "We need to access your location", "Ok");
-                }
-
-                // ขอ permission จริงๆ
-                var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.LocationWhenInUse);
-                if (results.ContainsKey(Permission.LocationWhenInUse))
-                    status = results[Permission.LocationWhenInUse];
-            }
-
-            // Already granted (maybe), go on
-            if (status == PermissionStatus.Granted)
-            {
-                // Granted! Get the location
-                GetLocation();
-            }
-            else
-            {
-                await DisplayAlert("Access to location denied", "We don't have access to your location", "Ok");
-            }
-        }
-
-        private async void GetLocation()
-        {
-            position = await locator.GetPositionAsync(); // use plugin to get location
-            if (!locator.IsListening)
-            {
-                await locator.StartListeningAsync(TimeSpan.FromMinutes(30), 500); // รอการเปลี่ยนค่า
-            }
-        }
-
-        void Locator_PositionChanged(object sender, PositionEventArgs e)
-        {
-            // on change
-            // set new position
-            position = e.Position;
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-
-            GetLocationPermission();
+            viewModel.GetLocationPermission();
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-
-            locator.StopListeningAsync(); // stop listening
+            viewModel.StopListeningLocationUpdates();
         }
 
         async void searchEntry_TextChanged(object sender, TextChangedEventArgs e)

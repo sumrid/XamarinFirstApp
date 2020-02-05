@@ -16,11 +16,11 @@
         <!-- ค้นหาสถานที่ -->
         <Entry x:Name="searchEntry"
                Text="{Binding Query, Mode=TwoWay}"
-               TextChanged="searchEntry_TextChanged"
                Style="{StaticResource mainEntryStyle}"
                Placeholder="ค้นหาสถานที่"/>
         <!-- รายการสถานที่ -->
         <ListView x:Name="venuesListView"
+                  ItemsSource="{Binding Venues}"
                   IsVisible="{Binding ShowVenues}"
                   SelectedItem="{Binding SelectedVenue, Mode=TwoWay}"
                   HeightRequest="20"
@@ -55,14 +55,14 @@
         
         <!-- ปุ่ม -->
         <Button Text="บันทึก"
+                Command="{Binding SaveCommand}"
+                CommandParameter="{Binding CanSave}"
                 Style="{StaticResource mainButtonStyle}"
                 IsEnabled="{Binding CanSave}"
-                x:Name="saveButton"
-                Clicked="saveButton_Clicked"/>
+                x:Name="saveButton"/>
         <Button Text="ยกเลิก"
                 Style="{StaticResource cancelButtonStyle}"
-                Command="{Binding CancelCommand}"
-                CommandParameter="{Binding CanSave}"/>
+                Command="{Binding CancelCommand}"/>
 
     </StackLayout>
 
